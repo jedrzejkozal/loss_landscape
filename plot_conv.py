@@ -1,10 +1,9 @@
-from plotting.ploting_points import *
-from models.conv import conv_model
-from datasets import mnist_dataset
-
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
+from datasets import mnist_dataset
+from models.conv import conv_model
+from plotting.ploting_points import *
 
 dataset = mnist_dataset()
 model = conv_model(dataset)

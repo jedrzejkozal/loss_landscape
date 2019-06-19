@@ -6,7 +6,6 @@ import pytest
 import numpy as np
 
 
-@pytest.fixture
 def conv_model(dataset):
     train_X, train_Y, test_X, test_Y = dataset
     num_classes = train_Y.shape[1]
@@ -23,12 +22,12 @@ def conv_model(dataset):
     model.add(Dense(num_classes, activation='softmax'))
 
     model.compile(loss='categorical_crossentropy',
-              optimizer='Adadelta',
-              metrics=['accuracy'])
+                  optimizer='Adadelta',
+                  metrics=['accuracy'])
 
     model.fit(train_X, train_Y,
-            epochs=1,#100,
-            batch_size=10,
-            verbose=1,
-            validation_data=(test_X, test_Y))
+              epochs=1,  # 100,
+              batch_size=10,
+              verbose=1,
+              validation_data=(test_X, test_Y))
     return model

@@ -1,43 +1,40 @@
+from keras.utils import to_categorical
+from keras.datasets import mnist
 import numpy as np
 
 
-def normalize(x):
-    return (x - np.mean(x, axis=0)) / (np.std(x, axis=0))
+def normalize(vector):
+    return (vector - np.mean(vector, axis=0)) / (np.std(vector, axis=0))
 
 
 def toy_dataset():
-    train_X = np.random.random((100,10))
-    train_Y = np.random.random((100,1))
-    test_X = np.random.random((100,10))
-    test_Y = np.random.random((100,1))
+    x_train = np.random.random((100, 10))
+    y_train = np.random.random((100, 1))
+    x_test = np.random.random((100, 10))
+    y_test = np.random.random((100, 1))
 
-    train_X = normalize(train_X)
-    train_Y = normalize(train_Y)
-    test_X = normalize(test_X)
-    test_Y = normalize(test_Y)
+    x_train = normalize(x_train)
+    y_train = normalize(y_train)
+    x_test = normalize(x_test)
+    y_test = normalize(y_test)
 
-    return train_X, train_Y, test_X, test_Y
-
-
-from keras.datasets import mnist
-from keras.utils import to_categorical
+    return x_train, y_train, x_test, y_test
 
 
 def mnist_dataset():
     img_rows, img_cols = 28, 28
     num_classes = 10
-    (train_X, train_Y), (test_X, test_Y) = mnist.load_data()
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-    train_X = train_X.reshape(train_X.shape[0], img_rows, img_cols, 1)
-    test_X = test_X.reshape(test_X.shape[0], img_rows, img_cols, 1)
+    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
+    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
 
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+    x_train /= 255
+    x_test /= 255
 
-    train_X = train_X.astype('float32')
-    test_X = test_X.astype('float32')
-    train_X /= 255
-    test_X /= 255
+    y_train = to_categorical(y_train, num_classes)
+    y_test = to_categorical(y_test, num_classes)
 
-    train_Y = to_categorical(train_Y, num_classes)
-    test_Y = to_categorical(test_Y, num_classes)
-
-    return train_X, train_Y, test_X, test_Y
+    return x_train, y_train, x_test, y_test

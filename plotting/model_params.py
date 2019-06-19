@@ -21,9 +21,11 @@ def get_model_weights(model):
 def it_is_bias(weights):
     return len(weights.shape) == 1
 
+
 def params_shape_and_size(model):
-    shape_selector = lambda w: w.shape
-    size_selector = lambda w: w.size
+    def shape_selector(w): return w.shape
+
+    def size_selector(w): return w.size
     params_shapes = get_model_quantity(model, shape_selector)
     params_sizes = get_model_quantity(model, size_selector)
 
