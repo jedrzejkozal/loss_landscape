@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 from datasets import toy_dataset
 from models.dense import dense_model
-from plotting.ploting_points import *
+from points_evaluation.ploting_points import *
 
 dataset = toy_dataset()
 model = dense_model(dataset)

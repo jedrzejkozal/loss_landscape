@@ -1,12 +1,12 @@
 import pytest
-
+"""
 from datasets import toy_dataset
 from models.conv import conv_model
 from models.dense import dense_model
 from plotting.model_params import *
 from plotting.ploting_points import *
 
-"""
+
 def test_array_to_model_params_dense_net_values_are_close_to_original():
     model = dense_model(toy_dataset())
     read_params, is_bias, biases = get_model_weights(model)

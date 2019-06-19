@@ -1,10 +1,10 @@
 import numpy as np
 import pytest
 
-from datasets import toy_dataset, mnist_dataset
-from models.conv import conv_model
-from models.dense import dense_model
-from plotting.model_params import *
+from tests.datasets import toy_dataset, mnist_dataset
+from tests.models.conv import conv_model
+from tests.models.dense import dense_model
+from points_evaluation.model_params import *
 
 
 class model_params_test(object):

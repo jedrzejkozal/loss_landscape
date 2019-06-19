@@ -4,7 +4,7 @@ from concurrent.futures import ProcessPoolExecutor
 from multiprocessing import cpu_count
 
 
-class LossCalc(object):
+class ModelWrapper(object):
 
     def __init__(self, model, x_test, y_test):
         self.model = model
