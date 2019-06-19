@@ -6,10 +6,10 @@ from multiprocessing import cpu_count
 
 class LossCalc(object):
 
-    def __init__(self, model, test_X, test_Y):
+    def __init__(self, model, x_test, y_test):
         self.model = model
-        self.test_X = test_X
-        self.test_Y = test_Y
+        self.x_test = x_test
+        self.y_test = y_test
 
     def calc_loss_for_grid(self, params_to_evaluate):
         plot_points = list(map(self.calc_loss, params_to_evaluate))
@@ -24,7 +24,7 @@ class LossCalc(object):
             layer.set_weights(params_to_set)
 
     def evaluate_loss(self):
-        results = self.model.evaluate(x=self.test_X, y=self.test_Y, verbose=0)
+        results = self.model.evaluate(x=self.x_test, y=self.y_test, verbose=0)
 
         loss_index = self.model.metrics_names.index('loss')
         return results[loss_index]

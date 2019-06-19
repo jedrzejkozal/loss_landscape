@@ -1,35 +1,39 @@
 
 def get_model_weights(model):
-    params = []
-    is_bias = []
-    biases = []
+    weights = []
+    is_bias_list = []
+    bias_values = []
     for layer in model.layers:
-        print("layer: ", layer.name)
         for w in layer.get_weights():
-            print("weights shape: ", w.shape)
-            if it_is_bias(w):
-                print("bias matix, skipping")
-                is_bias.append(True)
-                biases.append(w)
+            if is_bias(w):
+                weights.append(None)
+                is_bias_list.append(True)
+                bias_values.append(w)
             else:
-                params.append(w.flatten())
-                is_bias.append(False)
-                biases.append(None)
-    return params, is_bias, biases
+                weights.append(w.flatten())
+                is_bias_list.append(False)
+                bias_values.append(None)
+    return weights, is_bias_list, bias_values
 
 
-def it_is_bias(weights):
+def is_bias(weights):
     return len(weights.shape) == 1
 
 
 def params_shape_and_size(model):
+    return params_shape(model), params_size(model)
+
+
+def params_shape(model):
     def shape_selector(w): return w.shape
-
-    def size_selector(w): return w.size
     params_shapes = get_model_quantity(model, shape_selector)
-    params_sizes = get_model_quantity(model, size_selector)
+    return params_shapes
 
-    return params_shapes, params_sizes
+
+def params_size(model):
+    def size_selector(w): return w.size
+    params_sizes = get_model_quantity(model, size_selector)
+    return params_sizes
 
 
 def get_model_quantity(model, selector):

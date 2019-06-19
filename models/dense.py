@@ -13,7 +13,7 @@ def dense_model(dataset):
 
     train_X, train_Y, test_X, test_Y = dataset
     model.fit(train_X, train_Y,
-              epochs=100,
+              epochs=1,
               batch_size=20,
               verbose=1,
               validation_data=(test_X, test_Y))
