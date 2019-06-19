@@ -1,19 +1,20 @@
 
 def get_model_weights(model):
-    weights = []
-    is_bias_list = []
-    bias_values = []
-    for layer in model.layers:
-        for w in layer.get_weights():
-            if is_bias(w):
-                weights.append(None)
-                is_bias_list.append(True)
-                bias_values.append(w)
-            else:
-                weights.append(w.flatten())
-                is_bias_list.append(False)
-                bias_values.append(None)
+    weights, is_bias_list, bias_values = [], [], []
+    for w in model.get_weights():
+        add_weight(w, weights, is_bias_list, bias_values)
     return weights, is_bias_list, bias_values
+
+
+def add_weight(w, weights, is_bias_list, bias_values):
+    if is_bias(w):
+        weights.append(None)
+        is_bias_list.append(True)
+        bias_values.append(w)
+    else:
+        weights.append(w.flatten())
+        is_bias_list.append(False)
+        bias_values.append(None)
 
 
 def is_bias(weights):
