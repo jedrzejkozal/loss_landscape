@@ -9,7 +9,7 @@ class VectorToModelParams(object):
         self.is_bias = is_bias
         self.biases = biases
 
-    def to_model_params(self, array):
+    def to_model_params(self, vector):
         params = []
         last_index = 0
         i = 0
@@ -19,10 +19,16 @@ class VectorToModelParams(object):
             for weights_shape, weights_size in zip(layer_shapes, layer_sizes):
                 if self.is_bias[i]:
                     # biases are not changed
+                    #print("adding bias = ", self.biases[i])
+                    #print("adding bias with type = ", self.biases[i].dtype)
                     layer_params.append(self.biases[i])
                 else:
-                    a = np.array(array[last_index:last_index +
-                                       weights_size]).reshape(weights_shape)
+                    vector_slice = np.array(
+                        vector[last_index:last_index + weights_size])
+                    a = vector_slice.reshape(weights_shape)
+                    #print("adding a = ", a)
+                    #print("adding a with type = ", a.dtype)
+
                     layer_params.append(a)
                     last_index += weights_size
                 i += 1

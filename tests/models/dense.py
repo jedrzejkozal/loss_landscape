@@ -15,6 +15,6 @@ def dense_model(dataset):
     model.fit(train_X, train_Y,
               epochs=1,
               batch_size=20,
-              verbose=1,
+              verbose=10,
               validation_data=(test_X, test_Y))
     return model

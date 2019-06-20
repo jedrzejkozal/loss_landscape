@@ -1,7 +1,7 @@
 import numpy as np
 
 from points_evaluation.model_wrapper import *
-from points_evaluation.normalize_directions import *
+from points_evaluation.normal_directions import *
 from points_evaluation.vector_to_model_params_converter import *
 
 

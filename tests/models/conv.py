@@ -27,6 +27,6 @@ def conv_model(dataset):
     model.fit(x_train, y_train,
               epochs=1,
               batch_size=10,
-              verbose=1,
+              verbose=0,
               validation_data=(x_test, y_test))
     return model
