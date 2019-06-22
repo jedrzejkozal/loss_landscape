@@ -20,12 +20,11 @@ class TestVectorToModelParams(object):
         model = dense_model(toy_dataset())
         sut, model_weights, is_bias, biases = self.get_sut_and_test_input(
             model)
-
         input = self.weights_as_single_vector(model_weights)
-        recreated_params = sut.to_model_params(input)
-        recreated_params = [
-            x for inner_list in recreated_params for x in inner_list]
 
+        recreated_params = sut.to_model_params(input)
+
+        recreated_params = self.unwrap_list(recreated_params)
         for weights_matrix, is_b, bias, recreated_weights in zip(model_weights, is_bias, biases, recreated_params):
             self.is_close(recreated_weights, is_b,
                           bias, weights_matrix)
@@ -34,12 +33,11 @@ class TestVectorToModelParams(object):
         model = conv_model(mnist_single_items())
         sut, model_weights, is_bias, biases = self.get_sut_and_test_input(
             model)
-
         input = self.weights_as_single_vector(model_weights)
-        recreated_params = sut.to_model_params(input)
-        recreated_params = [
-            x for inner_list in recreated_params for x in inner_list]
 
+        recreated_params = sut.to_model_params(input)
+
+        recreated_params = self.unwrap_list(recreated_params)
         for weights_matrix, is_b, bias, recreated_weights in zip(model_weights, is_bias, biases, recreated_params):
             self.is_close(recreated_weights, is_b,
                           bias, weights_matrix)
@@ -48,6 +46,9 @@ class TestVectorToModelParams(object):
         weights = list(filter(lambda x: x is not None, weights))
         weights = list(map(lambda x: x.flatten(), weights))
         return np.hstack(weights)
+
+    def unwrap_list(self, l):
+        return [x for inner_list in l for x in inner_list]
 
     def is_close(self, recreated, is_bias, bias_value, weights_matrix):
         if is_bias:

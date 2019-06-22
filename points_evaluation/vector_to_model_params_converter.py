@@ -11,23 +11,34 @@ class VectorToModelParams(object):
 
     def to_model_params(self, vector):
         params = []
-        last_index = 0
-        i = 0
+        self.last_index = 0
+        self.i = 0
 
         for layer_shapes, layer_sizes in zip(self.params_shapes, self.params_sizes):
-            layer_params = []
-            for weights_shape, weights_size in zip(layer_shapes, layer_sizes):
-                if self.is_bias[i]:
-                    # biases are not changed
-                    layer_params.append(self.biases[i])
-                else:
-                    vector_slice = np.array(
-                        vector[last_index:last_index + weights_size])
-                    a = vector_slice.reshape(weights_shape)
-
-                    layer_params.append(a)
-                    last_index += weights_size
-                i += 1
+            layer_params = self.get_layer_params(
+                layer_shapes, layer_sizes, vector)
             params.append(layer_params)
 
         return params
+
+    def get_layer_params(self, layer_shapes, layer_sizes, vector):
+        layer_params = []
+        for weights_shape, weights_size in zip(layer_shapes, layer_sizes):
+            param = self.get_vector_or_bias(
+                vector, weights_shape, weights_size)
+            layer_params.append(param)
+            self.i += 1
+        return layer_params
+
+    def get_vector_or_bias(self, vector, weights_shape, weights_size):
+        if self.is_bias[self.i]:
+            return self.biases[self.i]  # biases are not changed
+        else:
+            return self.get_reshaped_slice(vector, weights_shape, weights_size)
+
+    def get_reshaped_slice(self, vector, weights_shape, weights_size):
+        vector_slice = np.array(
+            vector[self.last_index:self.last_index + weights_size])
+        reshaped_slice = vector_slice.reshape(weights_shape)
+        self.last_index += weights_size
+        return reshaped_slice
