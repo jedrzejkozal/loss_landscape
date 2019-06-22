@@ -5,12 +5,14 @@ def get_normalized_directions(vector_size, theta, params_shapes, is_bias):
     delta_direction = np.random.normal(size=vector_size)
     eta_direction = np.random.normal(size=vector_size)
 
-    normalize_directions(delta_direction, eta_direction,
-                         theta, params_shapes, is_bias)
+    normalize_direction(delta_direction, theta, params_shapes, is_bias)
+    normalize_direction(eta_direction, theta, params_shapes, is_bias)
     return delta_direction, eta_direction
 
 
-def normalize_directions(delta_direction, eta_direction, theta, params_shapes, is_bias):
+def normalize_direction(direction, theta, params_shapes, is_bias):
+    assert direction.size == theta.size, "normalized vector and theta shuld have same size, got {} and {}".format(
+        direction.size, theta.size)
     i = -1
     last_index = 0
 
@@ -20,25 +22,56 @@ def normalize_directions(delta_direction, eta_direction, theta, params_shapes, i
             if is_bias[i]:
                 continue
             else:
-                if len(weights_shape) == 4:  # is filter with shape: (3, 3, 1, 32)
-                    for filter_ in range(weights_shape[3]):
-                        num_of_filter_params = weights_shape[0] * \
-                            weights_shape[1]*weights_shape[2]
-                        filter_weights = theta[last_index:last_index +
-                                               num_of_filter_params]
-                        delta_direction[last_index:last_index+num_of_filter_params] = delta_direction[last_index:last_index+num_of_filter_params] / \
-                            np.linalg.norm(
-                                delta_direction[last_index:last_index+num_of_filter_params]) * np.linalg.norm(filter_weights)
-                        eta_direction[last_index:last_index+num_of_filter_params] = eta_direction[last_index:last_index+num_of_filter_params] / \
-                            np.linalg.norm(
-                                eta_direction[last_index:last_index+num_of_filter_params]) * np.linalg.norm(filter_weights)
-                        last_index += num_of_filter_params
-                else:
-                    for neuron in range(weights_shape[0]):
-                        neuron_weights = theta[last_index:last_index +
-                                               weights_shape[1]]
-                        delta_direction[last_index:last_index+weights_shape[1]] = delta_direction[last_index:last_index+weights_shape[1]
-                                                                                                  ] / np.linalg.norm(delta_direction[last_index:last_index+weights_shape[1]]) * np.linalg.norm(neuron_weights)
-                        eta_direction[last_index:last_index+weights_shape[1]] = eta_direction[last_index:last_index+weights_shape[1]
-                                                                                              ] / np.linalg.norm(eta_direction[last_index:last_index+weights_shape[1]]) * np.linalg.norm(neuron_weights)
-                        last_index += weights_shape[1]
+                direction, last_index = normalize_single_unit(
+                    direction, weights_shape, last_index, theta)
+    assert last_index == len(direction)
+
+
+def normalize_single_unit(direction, weights_shape, last_index, theta):
+    if is_filter(weights_shape):  # is filter with shape like: (3, 3, 1, 32)
+        params_per_filter = weights_shape[0] * \
+            weights_shape[1]*weights_shape[2]
+        direction, last_index = normalize_all_filters(
+            weights_shape[3], direction, last_index, params_per_filter, theta)
+    else:
+        params_per_neuron = weights_shape[1]
+        direction, last_index = normalize_all_neurons(
+            weights_shape[0], direction, last_index, params_per_neuron, theta)
+    return direction, last_index
+
+
+def is_filter(weights_shape):
+    return len(weights_shape) == 4
+
+
+def normalize_all_filters(num_of_filters, direction, last_index, params_per_filter, theta):
+    for filter_ in range(num_of_filters):
+        filter_weights, slice_index = get_vector_slice(
+            theta, last_index, params_per_filter)
+        direction[slice_index] = change_vector_norm(
+            direction[slice_index], np.linalg.norm(filter_weights))
+        last_index += params_per_filter
+    return direction, last_index
+
+
+def normalize_all_neurons(num_of_neurons, direction, last_index, params_per_neuron, theta):
+    for neuron in range(num_of_neurons):
+        neuron_weights, slice_index = get_vector_slice(
+            theta, last_index, params_per_neuron)
+        direction[slice_index] = change_vector_norm(
+            direction[slice_index], np.linalg.norm(neuron_weights))
+        last_index += params_per_neuron
+    return direction, last_index
+
+
+def get_vector_slice(vec, start, offset):
+    return vec[start:start+offset+1], slice(start, start+offset+1, 1)
+
+
+def change_vector_norm(vec, norm):
+    vec = normalize_vector(vec)
+    return vec * norm
+
+
+def normalize_vector(vec):
+    return vec / np.linalg.norm(vec)
