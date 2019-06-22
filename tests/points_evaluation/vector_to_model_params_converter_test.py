@@ -1,6 +1,6 @@
 import pytest
 
-from tests.datasets import toy_dataset, mnist_dataset
+from tests.datasets import *
 from tests.models.conv import conv_model
 from tests.models.dense import dense_model
 from points_evaluation.model_params import *
@@ -9,21 +9,20 @@ from points_evaluation.ploting_points import *
 
 class TestVectorToModelParams(object):
 
-    def get_sut_and_input(self, model):
+    def get_sut_and_test_input(self, model):
         model_weights, is_bias, biases = get_model_weights(model)
         params_shapes, params_sizes = params_shape_and_size(model)
         converter = VectorToModelParams(
             params_shapes, params_sizes, is_bias, biases)
-        # print(params_shapes, params_sizes)
         return converter, model_weights, is_bias, biases
 
     def test_to_model_params_dense_net_values_are_close_to_original(self):
         model = dense_model(toy_dataset())
-        sut, model_weights, is_bias, biases = self.get_sut_and_input(model)
-        model_weights = list(filter(lambda x: x is not None, model_weights))
+        sut, model_weights, is_bias, biases = self.get_sut_and_test_input(
+            model)
 
-        recreated_params = sut.to_model_params(
-            np.hstack(model_weights).flatten())
+        input = self.weights_as_single_vector(model_weights)
+        recreated_params = sut.to_model_params(input)
         recreated_params = [
             x for inner_list in recreated_params for x in inner_list]
 
@@ -32,12 +31,12 @@ class TestVectorToModelParams(object):
                           bias, weights_matrix)
 
     def test_to_model_params_conv_net_values_are_close_to_original(self):
-        model = conv_model(mnist_dataset())
-        sut, model_weights, is_bias, biases = self.get_sut_and_input(model)
-        model_weights = list(filter(lambda x: x is not None, model_weights))
+        model = conv_model(mnist_single_items())
+        sut, model_weights, is_bias, biases = self.get_sut_and_test_input(
+            model)
 
-        recreated_params = sut.to_model_params(
-            np.hstack(model_weights).flatten())
+        input = self.weights_as_single_vector(model_weights)
+        recreated_params = sut.to_model_params(input)
         recreated_params = [
             x for inner_list in recreated_params for x in inner_list]
 
@@ -45,8 +44,13 @@ class TestVectorToModelParams(object):
             self.is_close(recreated_weights, is_b,
                           bias, weights_matrix)
 
+    def weights_as_single_vector(self, weights):
+        weights = list(filter(lambda x: x is not None, weights))
+        weights = list(map(lambda x: x.flatten(), weights))
+        return np.hstack(weights)
+
     def is_close(self, recreated, is_bias, bias_value, weights_matrix):
         if is_bias:
-            assert np.isclose(bias_value, recreated.flatten()).all()
+            assert np.isclose(recreated.flatten(), bias_value).all()
         else:
-            assert np.isclose(weights_matrix, recreated.flatten()).all()
+            assert np.isclose(recreated.flatten(), weights_matrix).all()

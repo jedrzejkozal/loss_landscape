@@ -38,3 +38,8 @@ def mnist_dataset():
     y_test = to_categorical(y_test, num_classes)
 
     return x_train, y_train, x_test, y_test
+
+
+def mnist_single_items():
+    x_train, y_train, x_test, y_test = mnist_dataset()
+    return x_train[0:1], y_train[0:1], x_test[0:1], y_test[0:1]
