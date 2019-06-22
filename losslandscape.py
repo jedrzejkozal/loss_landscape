@@ -1,7 +1,7 @@
 from plots import *
-from points_evaluation.model_params import *
 from points_evaluation.model_wrapper import *
 from points_evaluation.ploting_points import *
+from utils.model_params import *
 
 
 def plot_loss(model, plot_type, x_test, y_test):
@@ -15,10 +15,12 @@ def plot_loss(model, plot_type, x_test, y_test):
 
     plot_points(plot_type, x, y, z)
 
+
 def weights_as_single_vector(weights):
     weights = list(filter(lambda x: x is not None, weights))
     weights = list(map(lambda x: x.flatten(), weights))
     return np.hstack(weights)
+
 
 def plot_points(plot_type, x, y, z):
     if plot_type == "levels":

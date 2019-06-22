@@ -3,8 +3,9 @@ import pytest
 from tests.datasets import *
 from tests.models.conv import conv_model
 from tests.models.dense import dense_model
-from points_evaluation.model_params import *
-from points_evaluation.ploting_points import *
+from utils.model_params import *
+#from points_evaluation.ploting_points import *
+from utils.vector_to_model_params_converter import *
 
 
 class TestVectorToModelParams(object):

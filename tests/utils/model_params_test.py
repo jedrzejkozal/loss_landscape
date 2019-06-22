@@ -4,7 +4,7 @@ import pytest
 from tests.datasets import toy_dataset, mnist_dataset
 from tests.models.conv import conv_model
 from tests.models.dense import dense_model
-from points_evaluation.model_params import *
+from utils.model_params import *
 
 
 class TestGetModelWeights(object):

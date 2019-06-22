@@ -1,7 +1,7 @@
 import numpy as np
 
 from points_evaluation.normal_directions import *
-from points_evaluation.vector_to_model_params_converter import *
+from utils.vector_to_model_params_converter import *
 
 
 def get_ploting_points(model_wrapper,
