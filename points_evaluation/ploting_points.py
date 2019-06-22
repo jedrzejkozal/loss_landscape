@@ -1,17 +1,13 @@
 import numpy as np
 
-from points_evaluation.model_wrapper import *
 from points_evaluation.normal_directions import *
 from points_evaluation.vector_to_model_params_converter import *
 
 
-def get_ploting_points(model,
-                       test_X, test_Y,
-                       model_weights,
+def get_ploting_points(model_wrapper,
+                       theta,
                        is_bias, biases,
                        params_shapes, params_sizes):
-    theta = np.hstack(model_weights)
-    del model_weights
     delta_direction, eta_direction = get_normalized_directions(
         theta.size, theta, params_shapes, is_bias)
 
@@ -20,7 +16,6 @@ def get_ploting_points(model,
     beta_ranage = np.linspace(-1.0, 1.0, num=number_of_points)
 
     x, y = np.meshgrid(alpha_range, beta_ranage)
-    model_wrapper = ModelWrapper(model, test_X, test_Y)
     points_generator = yield_grid_point(delta_direction, eta_direction,
                                         alpha_range, beta_ranage,
                                         theta)
