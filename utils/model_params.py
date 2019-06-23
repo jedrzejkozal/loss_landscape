@@ -1,8 +1,9 @@
 
 def get_model_weights(model):
     weights, is_bias_list, bias_values = [], [], []
-    for w in model.get_weights():
-        add_weight(w, weights, is_bias_list, bias_values)
+    for layer in model.layers:
+        for w in layer.get_weights():
+            add_weight(w, weights, is_bias_list, bias_values)
     return weights, is_bias_list, bias_values
 
 

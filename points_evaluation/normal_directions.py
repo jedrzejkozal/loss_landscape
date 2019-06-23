@@ -34,6 +34,8 @@ def normalize_single_unit(direction, weights_shape, last_index, theta):
         direction, last_index = normalize_all_filters(
             weights_shape[3], direction, last_index, params_per_filter, theta)
     else:
+        assert len(weights_shape) > 1, "weights matrix can not be a vector, got shape: {}".format(
+            weights_shape)
         params_per_neuron = weights_shape[1]
         direction, last_index = normalize_all_neurons(
             weights_shape[0], direction, last_index, params_per_neuron, theta)
