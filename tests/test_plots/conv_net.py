@@ -6,4 +6,4 @@ from losslandscape import *
 def test_conv_mnist_model():
     model = conv_model(mnist_dataset())
     _, _, x_test, y_test = mnist_dataset()
-    plot_loss(model, "levels", x_test, y_test)
+    plot_loss_3D(model, "levels", x_test, y_test)

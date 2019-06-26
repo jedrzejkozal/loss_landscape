@@ -6,4 +6,4 @@ from losslandscape import *
 def test_unlearned_conv_model():
     model = conv_model(mnist_single_items())
     _, _, x_test, y_test = mnist_single_items()
-    plot_loss(model, "levels", x_test, y_test)
+    plot_loss_3D(model, "levels", x_test, y_test)

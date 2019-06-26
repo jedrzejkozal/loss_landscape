@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
+def plot_2d(x, y, figure_index=0):
+    plt.figure(num=figure_index, figsize=(20, 15))
+    plt.plot(x, y, '-')
+
+
 def plot_levels(x, y, z, figure_index=0):
     plt.figure(num=figure_index, figsize=(20, 15))
     CS = plt.contour(x, y, z)

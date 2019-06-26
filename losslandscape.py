@@ -4,7 +4,20 @@ from points_evaluation.ploting_points import *
 from utils.model_params import *
 
 
-def plot_loss(model, plot_types, x_test, y_test):
+def plot_loss(model, x_test, y_test):
+
+    model_wrapper = ModelWrapper(model, x_test, y_test)
+    model_weights, is_bias, biases = get_model_weights(model)
+    params_shapes, params_sizes = params_shape_and_size(model)
+    weights_vec = weights_as_single_vector(model_weights)
+
+    x, y = get_ploting_points(model_wrapper, weights_vec, is_bias,
+                              biases, params_shapes, params_sizes)
+
+    plot_all(("2d",), x, y)
+
+
+def plot_loss_3D(model, plot_types, x_test, y_test):
     if type(plot_types) is not tuple and type(plot_types) is not list:
         plot_types = (plot_types,)
 
@@ -13,7 +26,7 @@ def plot_loss(model, plot_types, x_test, y_test):
     params_shapes, params_sizes = params_shape_and_size(model)
     weights_vec = weights_as_single_vector(model_weights)
 
-    x, y, z = get_ploting_points(
+    x, y, z = get_ploting_points_3D(
         model_wrapper, weights_vec, is_bias, biases, params_shapes, params_sizes)
 
     plot_all(plot_types, x, y, z)
@@ -25,7 +38,7 @@ def weights_as_single_vector(weights):
     return np.hstack(weights)
 
 
-def plot_all(plot_types, x, y, z):
+def plot_all(plot_types, x, y, z=None):
     for i, plot_type in enumerate(plot_types):
         plot_points(plot_type, x, y, z, i)
 
@@ -37,5 +50,7 @@ def plot_points(plot_type, x, y, z, index):
         plot_levels(x, y, z, figure_index=index)
     elif plot_type == "3d":
         plot_3d(x, y, z, figure_index=index)
+    elif plot_type == "2d":
+        plot_2d(x, y, figure_index=index)
     else:
         raise RuntimeError("Unknown plot type")
