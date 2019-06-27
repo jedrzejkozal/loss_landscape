@@ -28,7 +28,7 @@ def test_dense_toy_dataset_model_with_labels():
     model = dense_model(toy_dataset())
     x_train, y_train, x_test, y_test = toy_dataset()
     plot_loss(model, ((x_train, y_train), (x_test, y_test)),
-              dataset_labes=('tranining set', 'test set'))
+              dataset_labels=('tranining set', 'test set'))
 
 
 def test_dense_toy_dataset_model_with_missing_labels():
@@ -36,7 +36,7 @@ def test_dense_toy_dataset_model_with_missing_labels():
     x_train, y_train, x_test, y_test = toy_dataset()
     with pytest.raises(AssertionError) as err:
         plot_loss(model, ((x_train, y_train), (x_test, y_test)),
-                  dataset_labes=('tranining set',))
+                  dataset_labels=('tranining set',))
 
     assert err.type is AssertionError
     assert "Datasets and labels length must be the same" in str(err.value)

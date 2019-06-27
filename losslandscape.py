@@ -4,27 +4,40 @@ from points_evaluation.ploting_points import *
 from utils.model_params import *
 
 
-def plot_loss(model, datasets, dataset_labes=None):
+def plot_loss(model, datasets, dataset_labels=None):
     datasets = make_tuple(datasets)
-    dataset_labes = make_tuple(dataset_labes)
+    dataset_labels = make_tuple(dataset_labels)
     if len(datasets) == 2 and type(datasets[0]) is not tuple:
         return [datasets]
 
-    if dataset_labes[0] is not None and len(datasets) != len(dataset_labes):
+    if dataset_labels[0] is not None and len(datasets) != len(dataset_labels):
         raise AssertionError(
-            "Datasets and labels length must be the same, got {} and {}".format(len(datasets), len(dataset_labes)))
+            "Datasets and labels length must be the same, got {} and {}".format(len(datasets), len(dataset_labels)))
 
-    plot_all_series(model, datasets, dataset_labes)
+    functions = get_all_functions(model, datasets)
+    plot_all_functions(model, functions, dataset_labels)
 
 
-def plot_all_series(model, datasets, dataset_labels):
-    weights_vec, is_bias, biases, params_shapes, params_sizes = get_model_params(
-        model)
+def get_all_functions(model, datasets):
+    model_params = get_model_params(model)
 
-    for (x_test, y_test), label in zip(datasets, dataset_labels):
-        model_wrapper = ModelWrapper(model, x_test, y_test)
-        x, y = get_ploting_points(model_wrapper, weights_vec, is_bias,
-                                  biases, params_shapes, params_sizes)
+    functions = []
+    for x_test, y_test in datasets:
+        x, y = loss_value_around_single_point(
+            model, x_test, y_test, model_params)
+        functions.append((x, y))
+    return functions
+
+
+def loss_value_around_single_point(model, x_test, y_test, model_params):
+    model_wrapper = ModelWrapper(model, x_test, y_test)
+    weights_vec, is_bias, biases, params_shapes, params_sizes = model_params
+    return get_ploting_points(model_wrapper, weights_vec, is_bias,
+                              biases, params_shapes, params_sizes)
+
+
+def plot_all_functions(model, functions, dataset_labels):
+    for (x, y), label in zip(functions, dataset_labels):
         plot_2d(x, y, figure_index=0, label=label)
     show_all()
 
@@ -39,7 +52,7 @@ def plot_loss_3D(model, plot_types, x_test, y_test):
     x, y, z = get_ploting_points_3D(
         model_wrapper, weights_vec, is_bias, biases, params_shapes, params_sizes)
 
-    plot_all(plot_types, x, y, z)
+    plot_all_types(plot_types, x, y, z)
 
 
 def make_tuple(obj):
@@ -61,7 +74,7 @@ def weights_as_single_vector(weights):
     return np.hstack(weights)
 
 
-def plot_all(plot_types, x, y, z=None):
+def plot_all_types(plot_types, x, y, z=None):
     for i, plot_type in enumerate(plot_types):
         plot_points(plot_type, x, y, z, i)
 
