@@ -34,7 +34,7 @@ def loss_value_around_single_point(model, x_test, y_test, model_params, number_o
     model_wrapper = ModelWrapper(model, x_test, y_test)
     weights_vec, is_bias, biases, params_shapes, params_sizes = model_params
     return get_ploting_points(model_wrapper, weights_vec, is_bias,
-                              biases, params_shapes, params_sizes, number_of_points=21)
+                              biases, params_shapes, params_sizes, number_of_points=number_of_points)
 
 
 def plot_all_functions(model, functions, dataset_labels):
@@ -51,7 +51,7 @@ def plot_loss_3D(model, plot_types, x_test, y_test, number_of_points=21):
         model)
 
     x, y, z = get_ploting_points_3D(
-        model_wrapper, weights_vec, is_bias, biases, params_shapes, params_sizes, number_of_points=21)
+        model_wrapper, weights_vec, is_bias, biases, params_shapes, params_sizes, number_of_points=number_of_points)
 
     plot_all_types(plot_types, x, y, z)
 
