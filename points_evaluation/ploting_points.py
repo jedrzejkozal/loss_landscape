@@ -7,11 +7,11 @@ from utils.vector_to_model_params_converter import *
 def get_ploting_points(model_wrapper,
                        theta,
                        is_bias, biases,
-                       params_shapes, params_sizes):
+                       params_shapes, params_sizes,
+                       number_of_points=21):
     delta_direction, _ = get_normalized_directions(
         theta.size, theta, params_shapes, is_bias)
 
-    number_of_points = 21
     alpha_range = np.linspace(-1.0, 1.0, num=number_of_points)
 
     points_generator = yield_line_point(delta_direction,
@@ -28,11 +28,11 @@ def get_ploting_points(model_wrapper,
 def get_ploting_points_3D(model_wrapper,
                           theta,
                           is_bias, biases,
-                          params_shapes, params_sizes):
+                          params_shapes, params_sizes,
+                          number_of_points=21):
     delta_direction, eta_direction = get_normalized_directions(
         theta.size, theta, params_shapes, is_bias)
 
-    number_of_points = 21
     alpha_range = np.linspace(-1.0, 1.0, num=number_of_points)
     beta_ranage = np.linspace(-1.0, 1.0, num=number_of_points)
 

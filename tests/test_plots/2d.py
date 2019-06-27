@@ -40,3 +40,9 @@ def test_dense_toy_dataset_model_with_missing_labels():
 
     assert err.type is AssertionError
     assert "Datasets and labels length must be the same" in str(err.value)
+
+
+def test_dense_toy_dataset_number_of_points_41():
+    model = dense_model(toy_dataset())
+    _, _, x_test, y_test = toy_dataset()
+    plot_loss(model, (x_test, y_test), number_of_points=41)

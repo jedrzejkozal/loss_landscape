@@ -4,36 +4,37 @@ from points_evaluation.ploting_points import *
 from utils.model_params import *
 
 
-def plot_loss(model, datasets, dataset_labels=None):
+def plot_loss(model, datasets, dataset_labels=None, number_of_points=21):
     datasets = make_tuple(datasets)
     dataset_labels = make_tuple(dataset_labels)
     if len(datasets) == 2 and type(datasets[0]) is not tuple:
-        return [datasets]
+        datasets = [datasets]
 
     if dataset_labels[0] is not None and len(datasets) != len(dataset_labels):
         raise AssertionError(
             "Datasets and labels length must be the same, got {} and {}".format(len(datasets), len(dataset_labels)))
 
-    functions = get_all_functions(model, datasets)
+    functions = get_all_functions(
+        model, datasets, number_of_points=number_of_points)
     plot_all_functions(model, functions, dataset_labels)
 
 
-def get_all_functions(model, datasets):
+def get_all_functions(model, datasets, number_of_points=21):
     model_params = get_model_params(model)
 
     functions = []
     for x_test, y_test in datasets:
         x, y = loss_value_around_single_point(
-            model, x_test, y_test, model_params)
+            model, x_test, y_test, model_params, number_of_points=number_of_points)
         functions.append((x, y))
     return functions
 
 
-def loss_value_around_single_point(model, x_test, y_test, model_params):
+def loss_value_around_single_point(model, x_test, y_test, model_params, number_of_points=21):
     model_wrapper = ModelWrapper(model, x_test, y_test)
     weights_vec, is_bias, biases, params_shapes, params_sizes = model_params
     return get_ploting_points(model_wrapper, weights_vec, is_bias,
-                              biases, params_shapes, params_sizes)
+                              biases, params_shapes, params_sizes, number_of_points=21)
 
 
 def plot_all_functions(model, functions, dataset_labels):
@@ -42,7 +43,7 @@ def plot_all_functions(model, functions, dataset_labels):
     show_all()
 
 
-def plot_loss_3D(model, plot_types, x_test, y_test):
+def plot_loss_3D(model, plot_types, x_test, y_test, number_of_points=21):
     plot_types = make_tuple(plot_types)
 
     model_wrapper = ModelWrapper(model, x_test, y_test)
@@ -50,7 +51,7 @@ def plot_loss_3D(model, plot_types, x_test, y_test):
         model)
 
     x, y, z = get_ploting_points_3D(
-        model_wrapper, weights_vec, is_bias, biases, params_shapes, params_sizes)
+        model_wrapper, weights_vec, is_bias, biases, params_shapes, params_sizes, number_of_points=21)
 
     plot_all_types(plot_types, x, y, z)
 
