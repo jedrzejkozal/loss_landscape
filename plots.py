@@ -14,6 +14,7 @@ def plot_levels(x, y, z, figure_index=0):
     plt.figure(num=figure_index, figsize=(20, 15))
     CS = plt.contour(x, y, z)
     plt.clabel(CS, inline=1, fontsize=10)
+    plt.savefig('levels.png')
 
 
 def plot_3d(x, y, z, figure_index=0):
@@ -21,6 +22,7 @@ def plot_3d(x, y, z, figure_index=0):
     ax = Axes3D(fig)
     ax.plot_surface(x, y, z, rstride=1, cstride=1,
                     cmap='viridis', edgecolor='none')
+    plt.savefig('plot_3d.png')
 
 
 def show_all():
