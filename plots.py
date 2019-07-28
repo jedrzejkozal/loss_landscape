@@ -24,4 +24,5 @@ def plot_3d(x, y, z, figure_index=0):
 
 
 def show_all():
-    plt.show()
+    # plt.show()
+    plt.savefig('fig.png')
