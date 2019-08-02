@@ -158,7 +158,7 @@ def train_network(model, batch_size=128):
 
     history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                                   validation_data=(x_test, y_test),
-                                  epochs=300,
+                                  epochs=1,  # 300,
                                   verbose=2,
                                   workers=4,
                                   steps_per_epoch=x_train.shape[0] /
@@ -168,7 +168,7 @@ def train_network(model, batch_size=128):
 
 
 if __name__ == '__main__':
-    depth = 56
+    depth = 110
     input_shape = x_train.shape[1:]
 
     model = vgg_like(input_shape=input_shape, depth=depth)
