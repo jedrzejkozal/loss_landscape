@@ -2,11 +2,9 @@
 
 Keras implementation of [loss-landscape](https://github.com/tomgoldstein/loss-landscape) and reproduction of results from [this paper](https://arxiv.org/abs/1712.09913).
 
-Using code from this repo you can visualize the loss value around the learned set of parameters. In this case we treat the set of network parameters at one point. We evaluate the loss values around that point and plot it in 2d or 3d.
+Using code from this repo you can visualize the loss value around the learned set of parameters. In this case we treat the set of network parameters at one point. We evaluate the loss values around that point and plot it in 2d or 3d. To form a grid of x-y points around learned parameters (or a set of points on the line) we need to specify a direction of x or y axis. Here we use random direction with filter-wise normalization. For a more detailed explanation with mathematical background, please read [the introductory work](https://arxiv.org/abs/1712.09913).
 
 Please be aware, that during the evaluation of loss values, the weights values of your model will be changed. If you don't want to lose your weights, please create checkpoint of your model before calling any of below functions.
-
-For a more detailed explanation with mathematical background, please read [the paper](https://arxiv.org/abs/1712.09913), which introduced this visualization technique.
 
 ## Interface
 
